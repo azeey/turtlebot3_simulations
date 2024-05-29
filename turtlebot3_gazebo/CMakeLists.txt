@@ -20,8 +20,12 @@ endif()
 # Find ament packages and libraries for ament and system dependencies
 ################################################################################
 find_package(ament_cmake REQUIRED)
-# find_package(gazebo REQUIRED)
-# find_package(gazebo_ros_pkgs REQUIRED)
+find_package(gz_math_vendor REQUIRED)
+find_package(gz-math REQUIRED)
+find_package(gz_sim_vendor REQUIRED)
+find_package(gz-sim REQUIRED)
+find_package(gz_common_vendor REQUIRED)
+find_package(gz-common REQUIRED COMPONENTS graphics)
 find_package(geometry_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
@@ -32,12 +36,10 @@ find_package(tf2 REQUIRED)
 # Build
 ################################################################################
 link_directories(
-  # ${GAZEBO_LIBRARY_DIRS}
 )
 
 include_directories(
   include
-  # ${GAZEBO_INCLUDE_DIRS}
 )
 
 set(dependencies
@@ -53,14 +55,15 @@ set(EXEC_NAME "turtlebot3_drive")
 add_executable(${EXEC_NAME} src/turtlebot3_drive.cpp)
 ament_target_dependencies(${EXEC_NAME} ${dependencies})
 
-# add_library(obstacle1 SHARED models/turtlebot3_dqn_world/obstacle_plugin/obstacle1.cc)
-# target_link_libraries(obstacle1 ${GAZEBO_LIBRARIES})
-#
-# add_library(obstacle2 SHARED models/turtlebot3_dqn_world/obstacle_plugin/obstacle2.cc)
-# target_link_libraries(obstacle2 ${GAZEBO_LIBRARIES})
-#
-# add_library(obstacles SHARED models/turtlebot3_dqn_world/obstacle_plugin/obstacles.cc)
-# target_link_libraries(obstacles ${GAZEBO_LIBRARIES})
+set(GAZEBO_LIBRARIES gz-math::gz-math gz-sim::gz-sim gz-common::graphics)
+add_library(obstacle1 SHARED models/turtlebot3_dqn_world/obstacle_plugin/obstacle1.cc)
+target_link_libraries(obstacle1 ${GAZEBO_LIBRARIES})
+
+add_library(obstacle2 SHARED models/turtlebot3_dqn_world/obstacle_plugin/obstacle2.cc)
+target_link_libraries(obstacle2 ${GAZEBO_LIBRARIES})
+
+add_library(obstacles SHARED models/turtlebot3_dqn_world/obstacle_plugin/obstacles.cc)
+target_link_libraries(obstacles ${GAZEBO_LIBRARIES})
 
 ################################################################################
 # Install

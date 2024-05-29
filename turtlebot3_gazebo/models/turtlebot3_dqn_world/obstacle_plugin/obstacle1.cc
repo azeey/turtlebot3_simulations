@@ -14,80 +14,66 @@
 //
 // Author: Ryan Shim
 
-#include <ignition/math.hh>
-#include <stdio.h>
+#include "ObstacleAnimator.hh"
 
-#include <gazebo/common/common.hh>
-#include <gazebo/gazebo.hh>
-#include <gazebo/physics/physics.hh>
+#include <gz/plugin/Register.hh>
 
+#include <gz/common/Animation.hh>
+#include <gz/common/KeyFrame.hh>
+#include <gz/sim/System.hh>
 
-namespace gazebo
-{
-class Obstacle1: public ModelPlugin
-{
+namespace gazebo {
+class Obstacle1 : public ObstacleAnimator {
 public:
-  void Load(physics::ModelPtr _parent, sdf::ElementPtr /*_sdf*/)
-  {
-    // Store the pointer to the model
-    this->model = _parent;
+  Obstacle1() : ObstacleAnimator(CreateAnimation()) {}
 
+  gz::common::PoseAnimation CreateAnimation() {
     // create the animation
-    gazebo::common::PoseAnimationPtr anim(
-      // name the animation "move_1",
-      // make it last 260 seconds,
-      // and set it on a repeat loop
-      new gazebo::common::PoseAnimation("move1", 160.0, true));
+    // name the animation "move_1",
+    // make it last 260 seconds,
+    // and set it on a repeat loop
+    gz::common::PoseAnimation anim("move1", 160.0, true);
 
-    gazebo::common::PoseKeyFrame * key;
+    gz::common::PoseKeyFrame *key;
 
     // set starting location of the box
-    key = anim->CreateKeyFrame(0);
-    key->Translation(ignition::math::Vector3d(0.0, 0.0, 0.0));
-    key->Rotation(ignition::math::Quaterniond(0, 0, 0));
+    key = anim.CreateKeyFrame(0);
+    key->Translation(gz::math::Vector3d(0.0, 0.0, 0.0));
+    key->Rotation(gz::math::Quaterniond(0, 0, 0));
 
-    key = anim->CreateKeyFrame(10);
-    key->Translation(ignition::math::Vector3d(-0.5, -1.0, 0.0));
-    key->Rotation(ignition::math::Quaterniond(0, 0, 0));
+    key = anim.CreateKeyFrame(10);
+    key->Translation(gz::math::Vector3d(-0.5, -1.0, 0.0));
+    key->Rotation(gz::math::Quaterniond(0, 0, 0));
 
-    key = anim->CreateKeyFrame(50);
-    key->Translation(ignition::math::Vector3d(-3.5, -1.0, 0.0));
-    key->Rotation(ignition::math::Quaterniond(0, 0, 0));
+    key = anim.CreateKeyFrame(50);
+    key->Translation(gz::math::Vector3d(-3.5, -1.0, 0.0));
+    key->Rotation(gz::math::Quaterniond(0, 0, 0));
 
-    key = anim->CreateKeyFrame(70);
-    key->Translation(ignition::math::Vector3d(-3.7, -3.0, 0.0));
-    key->Rotation(ignition::math::Quaterniond(0, 0, 0));
+    key = anim.CreateKeyFrame(70);
+    key->Translation(gz::math::Vector3d(-3.7, -3.0, 0.0));
+    key->Rotation(gz::math::Quaterniond(0, 0, 0));
 
-    key = anim->CreateKeyFrame(90);
-    key->Translation(ignition::math::Vector3d(-3.5, -1.0, 0.0));
-    key->Rotation(ignition::math::Quaterniond(0, 0, 0));
+    key = anim.CreateKeyFrame(90);
+    key->Translation(gz::math::Vector3d(-3.5, -1.0, 0.0));
+    key->Rotation(gz::math::Quaterniond(0, 0, 0));
 
-    key = anim->CreateKeyFrame(130);
-    key->Translation(ignition::math::Vector3d(-0.5, -1.0, 0.0));
-    key->Rotation(ignition::math::Quaterniond(0, 0, 0));
+    key = anim.CreateKeyFrame(130);
+    key->Translation(gz::math::Vector3d(-0.5, -1.0, 0.0));
+    key->Rotation(gz::math::Quaterniond(0, 0, 0));
 
-    key = anim->CreateKeyFrame(140);
-    key->Translation(ignition::math::Vector3d(0.0, 0.0, 0.0));
-    key->Rotation(ignition::math::Quaterniond(0, 0, 0));
+    key = anim.CreateKeyFrame(140);
+    key->Translation(gz::math::Vector3d(0.0, 0.0, 0.0));
+    key->Rotation(gz::math::Quaterniond(0, 0, 0));
 
-    key = anim->CreateKeyFrame(160);
-    key->Translation(ignition::math::Vector3d(0.0, 0.0, 0.0));
-    key->Rotation(ignition::math::Quaterniond(0, 0, 0));
+    key = anim.CreateKeyFrame(160);
+    key->Translation(gz::math::Vector3d(0.0, 0.0, 0.0));
+    key->Rotation(gz::math::Quaterniond(0, 0, 0));
 
-    // set the animation
-    _parent->SetAnimation(anim);
+    return anim;
   }
-
-// Pointer to the model
-
-private:
-  physics::ModelPtr model;
-
-// Pointer to the update event connection
-
-private:
-  event::ConnectionPtr updateConnection;
 };
 // Register this plugin with the simulator
-GZ_REGISTER_MODEL_PLUGIN(Obstacle1)
-}  // namespace gazebo
+GZ_ADD_PLUGIN(Obstacle1, ::gz::sim::System, ::gz::sim::ISystemConfigure,
+              ::gz::sim::ISystemPreUpdate)
+GZ_ADD_PLUGIN_ALIAS(Obstacle1, "obstacle1")
+} // namespace gazebo
